@@ -10,8 +10,7 @@ Txtdtracker is an AWK-script with many hats. It can be:
 Clone the repository or download the zip and set the script to be executable:
 
 https://github.com/bennovankeulen/txtdtracker.git  
-txtdtracker.awk chmod +x 
-
+chmod +x txtdtracker.awk
 
 ## Dependencies
 SoX  
