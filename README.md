@@ -34,8 +34,8 @@ G1
 awk -f txtdtracker.awk scores/name-of-your-file.txt
 ```
 
-Txtdracker will play all lines from top to bottom with the pluck synth of SoX and a default tempo of 120 bpm.  
-Multiple notes on a line form a chord and every line is one step. An empty line is a silent step. 
+Txtdracker will play all lines in the file, from top to bottom, with the pluck synth of SoX and a default tempo of 120 bpm.  
+Multiple notes on a line form a chord and every line is considered one step. An empty line is a silent step. 
 
 By adding commands you can alter the sound.
 
@@ -68,7 +68,7 @@ A1,C#,B  | play random note from list
 .m       | shell macro
 %var     | shell variable
 halt     | stop execution
-  - this is a comment
+\- this is a comment
 
 
 The demo song contains all txtdtracker commands.
