@@ -9,18 +9,18 @@ Txtdtracker is an AWK-script with many hats. It can be:
 ## Installation
 Clone the repository or download the zip and set the script to be executable:
 
-https://github.com/bennovankeulen/txtdtracker.git
+https://github.com/bennovankeulen/txtdtracker.git  
 txtdtracker.awk chmod +x 
 
 
 ## Dependencies
 SoX  
-(G)AWK (Everyting works fine in traditional AWK except shell macros and shell variables).  
+(G)AWK (Everything works fine in traditional AWK except shell macros and shell variables).  
 GNU sleep (type 'sleep 0.5' into the terminal to check if you can use floats). 
 
 
 ## Usage
-Create a text file in the scores directory with some notes:
+Create a text file in the scores directory with some music notes:
 
 ```
 E1
@@ -29,13 +29,13 @@ E1 G2 B3 C#4
 G1
 ```
 
-### Play the file
+#### Play the file
 ```
-awk -f txtdtracker.awk scores/name-of-your-textfile.txt
+awk -f txtdtracker.awk scores/name-of-your-file.txt
 ```
 
-Txtdracker will play all lines in the file from top to bottom with the pluck synth of SoX and a default tempo of 120 bpm.  
-Multiple notes on a line form a chord and every line is considered one step. An empty line is a silent step. 
+Txtdracker will play all lines from top to bottom with the pluck synth of SoX and a default tempo of 120 bpm.  
+Multiple notes on a line form a chord and every line is one step. An empty line is a silent step. 
 
 By adding commands you can alter the sound.
 
@@ -54,13 +54,13 @@ This will play the chord with a sawtooth synth and the last note with a sine syn
 
 
 ## Commands
-Command  | Value
--------- | -----
-s        | synth (sine square triangle sawtooth trapezium exp pluck)
+Command  | Value or explanation
+-------- | --------------------
+s        | synth [sine square triangle sawtooth trapezium exp pluck]
 t        | steptime in seconds
 n        | note length in seconds
 e        | SoX effects string
-p        | print to screen (0 show nothing, s show shell commands, n show notes, l show linenumbers)
+p        | print to screen [0 show nothing, s show shell commands, n show notes, l show linenumbers]
 x        | execute position in step [s]tart or [m]id
 d        | seed for random commands
 A1,C#,B  | play random note from list
@@ -68,7 +68,7 @@ A1,C#,B  | play random note from list
 .m       | shell macro
 %var     | shell variable
 halt     | stop execution
-         | - this is a comment
+  - this is a comment
 
 
 The demo song contains all txtdtracker commands.
@@ -83,12 +83,12 @@ Example with arguments
 awk -f txtdtracker.awk -v t=2.5 -v e="lowpass 400 channels 2 reverb 90" -v p="n" scores/name-of-your-textfile.txt
 ```
 
-t = steptime  
-e = effectstring  
-p = print to screen  
-s = synth  
-n = notelength  
-x = execute position  
+t=steptime  
+e=effectstring  
+p=print to screen  
+s=synth  
+n=notelength  
+x=execute position  
 
 
 ## License
