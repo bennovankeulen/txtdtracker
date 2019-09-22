@@ -93,7 +93,6 @@ return outstring
 
 
 # choose random a value from a comma separated list
-# C#,D4,30000,C#2
 function choose_random(cs_string) {
   split(cs_string,a,",")
   l = length(a)+1
@@ -102,11 +101,57 @@ function choose_random(cs_string) {
 }
 
 
+# sub function for diff_in_cents()
+function midinr(notestring) {
+  notenr["C"]  = 0
+  notenr["C#"] = 1
+  notenr["D"]  = 2
+  notenr["D#"] = 3
+  notenr["E"]  = 4
+  notenr["F"]  = 5
+  notenr["F#"] = 6
+  notenr["G"]  = 7
+  notenr["G#"] = 8
+  notenr["A"]  = 9
+  notenr["A#"] = 10
+  notenr["B"]  = 11
+
+  octave = substr(notestring,length(notestring),1)
+  note = substr(notestring, 1, length(notestring)-1)
+  nr = (octave * 12) + 12 + notenr[note]
+  return nr
+}
+
+
+function diff_in_cents(notestr_a, notestr_b) {
+  midinr(notestr_a)
+  midinr(notestr_b)
+  return (midinr(notestr_b) - midinr(notestr_a)) * 100
+}
+
+
+function calculate_xposition() {
+  if (xposition = "m") { # mid -- sounds human
+    beforetime = steptime/2
+    aftertime = steptime/2
+
+  } else if (xposition == "s") { # start
+  beforetime = 0
+  aftertime = steptime
+}
+}
 
 BEGIN {
 
   split("", macro_array)
   split("", var_array)
+
+  # sample vars
+  pathseperator = "/"
+  sample = ""
+  sampleplaymethod = "pitch"
+  originalpitch = "C4"
+  samplefxstring = ""
 
   # default seed
   seed = 19345
@@ -240,14 +285,16 @@ $1 ~ /^d$/ {
 # play notes
 /^ *[ABCDEFG][ 0-9#].*$/ {
 
-  if (xposition = "m") { # human
-    beforetime = steptime/2
-    aftertime = steptime/2
+  calculate_xposition()
 
-  } else if (xposition == "s") { # machine
-  beforetime = 0
-  aftertime = steptime
-}
+  #if (xposition = "m") { # human
+    #beforetime = steptime/2
+    #aftertime = steptime/2
+
+  #} else if (xposition == "s") { # machine
+  #beforetime = 0
+  #aftertime = steptime
+#}
 
 # construct sox play command
 playstring = "sleep " beforetime "; ( play -n -q synth " notelength " "
@@ -290,10 +337,41 @@ next
   next
 }
 
+# samples
+/^:/ {
+  # samples must have their own directory for this to work
+  if (match($1, pathseperator) != 0) { # get samplepath
+    sample = substr($1, 2) # remove :
+    originalpitch = $2
+    sampleplaymethod = $3
+
+  } else if ($1 ~ /^:[ABCDEFG][ 0-9#]/) { # play notes
+  calculate_xposition()
+  $1 = substr($1, 2)
+
+  for (si = 1; si <= NF; si++) {
+    cents = diff_in_cents(originalpitch, $si)
+    if (sampleplaymethod == "speed") {
+      cents = cents"c"
+    }
+    # construct sample play command
+    sampleplaystring = "sleep " beforetime "; ( play -q  " sample " "
+    parsed_effect = process_rnd_nrs(samplefxstring)
+    sampleplaystring = sampleplaystring parsed_effect " " sampleplaymethod " " cents " ) & sleep " aftertime
+    print_to_screen(sampleplaystring)
+    system(sampleplaystring)
+  } 
+} else { # get effectstring 
+samplefxstring = substr($0, 2)
+  }
+  next
+}
+
 # stop execution
 /^halt$/ {
   exit
 }
+
 
 # shell command
 # any line without a match is send to the shell

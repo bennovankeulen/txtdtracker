@@ -59,7 +59,7 @@ s        | synth [sine square triangle sawtooth trapezium exp pluck]
 t        | steptime in seconds
 n        | note length in seconds
 e        | SoX effects string
-p        | print to screen [0 show nothing, s show shell commands, n show notes, l show linenumbers]
+p        | print to screen [0 nothing, s shell commands, n notes, l linenumbers and notes]
 x        | execute position in step [s]tart or [m]id
 d        | seed for random commands
 A1,C#,B  | play random note from list
